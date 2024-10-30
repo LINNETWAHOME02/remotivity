@@ -1,0 +1,47 @@
+/* components/Navbar.css */
+.navbar {
+  background-color: #a49393;
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 20px;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  max-width: 900px;
+  width: 100%;
+  align-items: center;
+  border-radius: 5rem;
+  margin-top: 20px;
+}
+
+.navbar h1 a{
+  font-size: 24px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+.navbar h1 a:active{
+  color: aquamarine;
+}
+
+.nav-items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-items a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+.nav-items a:hover{
+  color: black;
+  text-decoration: underline;
+  transition: .5s;
+}
+.nav-items a:active{
+  color: aquamarine;
+}

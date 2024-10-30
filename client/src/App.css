@@ -1,0 +1,21 @@
+/* App.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f9f9f9;
+  }
+  
+  /* .App {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sidebar-or-navbar {
+    width: 250px; /* Adjust based on sidebar width */
+  /* }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px; /* Adjust padding as needed */
+    /* overflow: auto;
+  } */
