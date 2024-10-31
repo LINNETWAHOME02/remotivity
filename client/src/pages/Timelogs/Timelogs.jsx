@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './TimeLogs.css';
+import { useState, useEffect } from 'react';
+import "./Timelogs.css"
 
 const TimeLogs = () => {
   // State to store time logs

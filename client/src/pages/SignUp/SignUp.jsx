@@ -2,14 +2,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './SignUp.css'; // Importing the CSS file for styling
+import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
   // Define state variables for each form field
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
   });
+
+  const navigate = useNavigate();
 
   // Handle form input changes by updating the respective state
   const handleChange = (e) => {
@@ -21,10 +24,12 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/sign-up', { email, password });
-      console.log(response.data.message); // Success message
+      // Send formData object in the request
+      await axios.post('http://localhost:5000/api/auth/sign-up', formData, { withCredentials: true });
+      navigate('/tasks')
+      
     } catch (error) {
-      console.error('Error signing up:', error.response.data.message);
+      console.error('Error signing up:', error.response?.data?.message || error.message);
     }
   };
 
@@ -33,14 +38,13 @@ function SignUp() {
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         {/* Name input */}
-        <label htmlFor="name">Name</label>
+        <label htmlFor="name">Username</label>
         <input
           type="text"
-          id="name"
-          name="name"
-          value={formData.name}
+          id="username"
+          name="username"
+          value={formData.username}
           onChange={handleChange}
-          required
         />
 
         {/* Email input */}

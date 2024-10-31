@@ -1,21 +1,53 @@
 /* App.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #f9f9f9;
-  }
-  
-  /* .App {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .sidebar-or-navbar {
-    width: 250px; /* Adjust based on sidebar width */
-  /* }
-  
-  .main-content {
-    flex-grow: 1;
-    padding: 20px; /* Adjust padding as needed */
-    /* overflow: auto;
-  } */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: #f9f9f9;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Navbar styling */
+.Navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Container to hold sidebar and main content */
+.container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 60px; /* Adjust based on navbar height */
+  height: calc(100vh - 60px); /* Total height minus navbar */
+  overflow: hidden;
+  margin-top: 5rem;
+}
+
+/* Sidebar styling */
+.Sidebar {
+  width: 250px;
+  background-color: #333;
+  color: #fff;
+  padding-top: 20px;
+  overflow-y: auto;
+}
+
+/* Main content styling */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}

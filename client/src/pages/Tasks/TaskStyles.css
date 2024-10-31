@@ -1,4 +1,4 @@
-/* Task page layout */
+/* Task page layout
 .task-sections {
     display: flex;
     justify-content: space-around;
@@ -51,4 +51,4 @@
   .task-item.completed {
     background-color: lightgreen;
     text-decoration: line-through;
-  }
+  } */

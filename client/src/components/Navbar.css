@@ -1,6 +1,5 @@
-/* components/Navbar.css */
 .navbar {
-  background-color: #a49393;
+  background-color: #8b4513;
   display: flex;
   justify-content: space-around;
   padding: 15px 20px;
@@ -13,16 +12,23 @@
   align-items: center;
   border-radius: 5rem;
   margin-top: 20px;
+  margin-bottom: 4rem;
 }
 
-.navbar h1 a{
+.navbar h1 a {
   font-size: 24px;
   color: #ffffff;
   text-decoration: none;
   font-weight: bold;
+  transition: color 0.3s ease;
 }
-.navbar h1 a:active{
-  color: aquamarine;
+
+.navbar h1 a:hover {
+  color: #000000;
+}
+
+.navbar h1 a:active {
+  color: #7fffd4;
 }
 
 .nav-items {
@@ -36,12 +42,14 @@
   color: #ffffff;
   text-decoration: none;
   font-weight: bold;
+  transition: color 0.3s ease;
 }
-.nav-items a:hover{
-  color: black;
+
+.nav-items a:hover {
+  color: #000000;
   text-decoration: underline;
-  transition: .5s;
 }
-.nav-items a:active{
-  color: aquamarine;
+
+.nav-items a:active {
+  color: #7fffd4;
 }

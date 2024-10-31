@@ -22,11 +22,15 @@ function LogIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/log-in', { email, password });
-      localStorage.setItem('token', response.data.token); // Store token
+      // Pass the email and password directly
+      const response = await axios.post('http://localhost:5000/api/auth/log-in', { email, password }, { withCredentials: true });
+      
+      // Store the token in localStorage if needed
+      localStorage.setItem('token', response.data.token);
+      
       console.log('Logged in successfully');
     } catch (error) {
-      console.error('Error logging in:', error.response.data.message);
+      console.error('Error logging in:', error.response?.data?.message || error.message);
     }
   };
 
