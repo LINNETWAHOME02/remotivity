@@ -1,4 +1,3 @@
-// Login.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import './LogIn.css'; // Importing the CSS file for styling

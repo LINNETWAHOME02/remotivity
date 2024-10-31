@@ -1,4 +1,3 @@
-// SignUp.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import './SignUp.css'; // Importing the CSS file for styling

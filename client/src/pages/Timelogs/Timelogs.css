@@ -2,9 +2,9 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #a49393;
+    background-color: #8e4d1f;
     border-radius: 5px;
-    color: #ffffff;
+    color: #fff;
     margin-top: 4rem;
   }
   
@@ -18,14 +18,14 @@
   .time-logs-table th,
   .time-logs-table td {
     padding: 12px 15px;
-    border-bottom: 1px solid #ffffff;
+    border-bottom: 1px solid #fff;
   }
   
   .time-logs-table th {
-    background-color: #8e7d7d;
+    background-color: #6b2f04;
     font-weight: bold;
   }
   
   .time-logs-table tr:hover {
-    background-color: #9f8d8d;
+    background-color: #c2611c;
   }  

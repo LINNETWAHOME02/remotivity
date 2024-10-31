@@ -3,8 +3,6 @@ import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
 import axios from 'axios';
 
-import "./TaskStyles.css";
-
 function TasksPage() {
   const [tasks, setTasks] = useState([]);
 
