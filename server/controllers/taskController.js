@@ -1,32 +1,26 @@
-// controllers/taskController.js
 const Task = require('../models/Task');
 
-// Authentication middleware
-const checkAuth = async (req, res, next) => {
-  try {
-    // Check if user exists in request (should be set by previous auth middleware)
-    if (!req.user || !req.user._id) {
-      return res.status(401).json({
-        success: false,
-        message: 'Authentication required'
-      });
-    }
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: 'Authentication failed'
-    });
-  }
-};
+// const checkAuth = async (req, res, next) => {
+//   try {
+//     if (!req.user || !req.user._id) {
+//       return res.status(401).json({
+//         success: false,
+//         message: 'Authentication required'
+//       });
+//     }
+//     next();
+//   } catch (error) {
+//     return res.status(401).json({
+//       success: false,
+//       message: 'Authentication failed'
+//     });
+//   }
+// };
 
 
 
-// Task controllers
  // Create a new task
 const  createTask = async (req, res) => {
-    console.log(req.body, 'are you here')
-  const user_id = req.user?.userId;
 
     try {
       const { name, description, startTime, endTime } = req.body;
@@ -65,6 +59,26 @@ const  createTask = async (req, res) => {
       });
     }
   }
+
+  const getTasks = async (req, res) => {
+    const user_id = req.user?._id;
+  
+    try {
+      const tasks = await Task.find({ user: user_id }).exec();
+  
+      return res.status(200).json({
+        success: true,
+        tasks
+      });
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error fetching tasks'
+      });
+    }
+  };
+  
 
   // Get all tasks for current user
  const getUserTasks = async (req, res) => {
@@ -169,34 +183,38 @@ const  createTask = async (req, res) => {
   }
 
   // Delete task
- const deleteTask = async (req, res) => {
+  const deleteTask = async (req, res) => {
+    console.log(req.body);
     try {
       const task = await Task.findOne({
         _id: req.params.id,
-        user: req.user._id
+        user: req.user._id,
       });
-
+      console.log(task, 'this na task');
+  
       if (!task) {
         return res.status(404).json({
           success: false,
-          message: 'Task not found'
+          message: 'Task not found',
         });
       }
-
-      await task.remove();
-
+  
+      // Use deleteOne instead of remove
+      await Task.deleteOne({ _id: req.params.id });
+  
       return res.status(200).json({
         success: true,
-        message: 'Task deleted successfully'
+        message: 'Task deleted successfully',
       });
     } catch (error) {
       console.error('Error deleting task:', error);
       return res.status(500).json({
         success: false,
-        message: 'Error deleting task'
+        message: 'Error deleting task',
       });
     }
-  }
+  };
+  
 
 
-module.exports = { createTask, getUserTasks, getTask, updateTask, deleteTask, checkAuth };
+module.exports = { createTask,getTasks, getUserTasks, getTask, updateTask, deleteTask };

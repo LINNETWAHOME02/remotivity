@@ -20,7 +20,6 @@ const authMiddleware = (req, res, next) => {
 const authenticateToken = async (req, res, next) => {
   try {
     const token = req.cookies.wahome;
-   console.log(token,'token')
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -69,31 +68,5 @@ const authenticateToken = async (req, res, next) => {
 
 
 
-const protect = async (req, res, next) => {
-  try {
-    const jwt = req.cookies.jwt;
-    console.log('Cookies:', req.cookies); // Log cookies to check if the token is present
-
-    if (!jwt) {
-      return res.status(401).json({ message: "Not authorized, Please refresh and try to login" });
-    }
-
-    const { userId, role } = verifyJWT(jwt);
-    req.user = { userId, role };
-    next();
-  } catch (error) {
-    console.error('Authentication error:', error.message);
-    
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: "Invalid token" });
-    }
-    
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: "Token expired" });
-    }
-    
-    return res.status(500).json({ message: "Authentication failed" });
-  }
-};
 
 module.exports = {authMiddleware, authenticateToken};

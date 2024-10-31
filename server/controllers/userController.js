@@ -65,7 +65,6 @@ const signupUser = async (req, res) => {
         { expiresIn: '7d' }
       );
   
-    console.log(token, 'tokenism')
 
       // Set cookie
       res.cookie('wahome', token, {
@@ -77,7 +76,8 @@ const signupUser = async (req, res) => {
 
       return res.status(201).json({
         success: true,
-        message: 'User created successfully'
+        message: 'User created successfully',
+        newUser,
       });
   
     } catch (error) {
@@ -111,44 +111,44 @@ const signupUser = async (req, res) => {
   };
   
 
-// Login Controller
+// // Login Controller
+// const loginUser = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+    
+//     // Check if user exists
+//     const user = await Auth.findOne({ email });
+//     if (!user) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
+
+//     // Validate password
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
+
+//     // Generate token
+//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    
+//     // Store token in a cookie
+//     res.cookie('wahome', token, {
+//       httpOnly: true,
+//       expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
+//       // secure: process.env.NODE_ENV === 'production',
+//       sameSite:'lax',
+//     });
+
+//     res.status(200).json({ message: 'Login successful' });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error in login', error });
+//   }
+// };
+
+
+
+
 const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    
-    // Check if user exists
-    const user = await Auth.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Generate token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    
-    // Store token in a cookie
-    res.cookie('wahome', token, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
-      // secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-    });
-
-    res.status(200).json({ message: 'Login successful' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error in login', error });
-  }
-};
-
-
-
-
-exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -196,16 +196,15 @@ exports.loginUser = async (req, res) => {
       { expiresIn: '7d' }
     );
 
-    console.log(token, 'tokenism')
 
     // Set cookie
     res.cookie('wahome', token, {
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      maxAge: 36000000, // 1 hour
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
+      sameSite: 'lax',
+
     });
 
-    // Return success response without sensitive data
     return res.status(200).json({
       success: true,
       message: 'Login successful',
@@ -217,7 +216,6 @@ exports.loginUser = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login Error:', error);
     return res.status(500).json({
       success: false,
       message: 'Internal server error during login'
@@ -225,14 +223,13 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Add logout functionality
-exports.logoutUser = async (req, res) => {
+
+const logoutUser = async (req, res) => {
   try {
     res.cookie('wahome', '', {
       httpOnly: true,
-      expires: new Date(0),
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict'
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
+      sameSite: 'lax',
     });
 
     return res.status(200).json({
@@ -248,7 +245,6 @@ exports.logoutUser = async (req, res) => {
   }
 };
 
-// Middleware to verify token
 
 
-module.exports = { signupUser, loginUser }
+module.exports = { signupUser, loginUser, logoutUser }
