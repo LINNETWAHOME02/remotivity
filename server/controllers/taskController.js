@@ -1,28 +1,10 @@
-const Task = require('../models/Task');
+const Task = require('../models/Task'); // Tells our program how to handle tasks, like creating, finding, updating, or deleting them.
 
-// const checkAuth = async (req, res, next) => {
-//   try {
-//     if (!req.user || !req.user._id) {
-//       return res.status(401).json({
-//         success: false,
-//         message: 'Authentication required'
-//       });
-//     }
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({
-//       success: false,
-//       message: 'Authentication failed'
-//     });
-//   }
-// };
-
-
-
- // Create a new task
+ // createTask controller
 const  createTask = async (req, res) => {
 
     try {
+      // Takes Task Info: It grabs the name, description, startTime, and endTime from what someone typed (req.body).
       const { name, description, startTime, endTime } = req.body;
       console.log(req.body, 'what')
 
@@ -60,12 +42,15 @@ const  createTask = async (req, res) => {
     }
   }
 
+  // getTasks controller
   const getTasks = async (req, res) => {
     const user_id = req.user?._id;
   
     try {
+      // Finds Tasks: It looks for all tasks linked to the logged-in user (user_id).
       const tasks = await Task.find({ user: user_id }).exec();
   
+      // Sends Tasks: It returns the list of tasks to the user
       return res.status(200).json({
         success: true,
         tasks
@@ -80,12 +65,16 @@ const  createTask = async (req, res) => {
   };
   
 
+  // getUserTasks controller
   // Get all tasks for current user
+  // Similar to getTasks, but it also sorts the tasks
  const getUserTasks = async (req, res) => {
     try {
+      // Finds and Sorts Tasks: It finds tasks for the user and sorts them by startTime in descending order (newest tasks first)
       const tasks = await Task.find({ user: req.user._id })
         .sort({ startTime: -1 });
 
+        // Sends Tasks: It sends back the sorted list
       return res.status(200).json({
         success: true,
         count: tasks.length,
@@ -100,13 +89,12 @@ const  createTask = async (req, res) => {
     }
   }
 
-  // Get single task
+  // getTask controller
+  // Get single task / retrieves a single task
  const getTask = async (req, res) => {
     try {
-      const task = await Task.findOne({
-        _id: req.params.id,
-        user: req.user._id
-      });
+      // Finds Task: It looks for one specific task using the id from the request (req.params.id), making sure the task belongs to the current user.
+      const task = await Task.findOne({ _id: req.params.id, user: req.user._id });
 
       if (!task) {
         return res.status(404).json({
@@ -115,6 +103,7 @@ const  createTask = async (req, res) => {
         });
       }
 
+      // Sends Task: If the task is found, it sends it back
       return res.status(200).json({
         success: true,
         task
@@ -128,11 +117,12 @@ const  createTask = async (req, res) => {
     }
   }
 
-  // Update task
+  // updateTask controller
  const updateTask = async (req, res) => {
     try {
       const { name, description, startTime, endTime } = req.body;
 
+      // Updates Info: If found, it updates the task with any new name, description, startTime, or endTime provided
       const task = await Task.findOne({
         _id: req.params.id,
         user: req.user._id
@@ -145,6 +135,7 @@ const  createTask = async (req, res) => {
         });
       }
 
+      // Finds the Task: It first checks if the task exists
       const updatedTask = await Task.findByIdAndUpdate(
         req.params.id,
         {
@@ -156,6 +147,7 @@ const  createTask = async (req, res) => {
         { new: true, runValidators: true }
       );
 
+      // Sends Back Confirmation: It confirms the task was updated successfully
       return res.status(200).json({
         success: true,
         message: 'Task updated successfully',
@@ -182,26 +174,26 @@ const  createTask = async (req, res) => {
     }
   }
 
-  // Delete task
+  // deleteTask controller
   const deleteTask = async (req, res) => {
     console.log(req.body);
     try {
-      const task = await Task.findOne({
-        _id: req.params.id,
-        user: req.user._id,
-      });
-      console.log(task, 'this na task');
+      // Finds the Task: It first checks if the task exists using its id
+      const task = await Task.findOne({ _id: req.params.id, user: req.user._id});
+      console.log(task, 'Task to be deleted')
   
       if (!task) {
         return res.status(404).json({
           success: false,
-          message: 'Task not found',
+          message: 'Task not found'
         });
       }
   
+      // Deletes Task: If found, it deletes the task
       // Use deleteOne instead of remove
       await Task.deleteOne({ _id: req.params.id });
   
+      // Sends Back Confirmation: It confirms the task was deleted.
       return res.status(200).json({
         success: true,
         message: 'Task deleted successfully',
@@ -210,11 +202,11 @@ const  createTask = async (req, res) => {
       console.error('Error deleting task:', error);
       return res.status(500).json({
         success: false,
-        message: 'Error deleting task',
+        message: 'Error while deleting task'
       });
     }
   };
   
 
 
-module.exports = { createTask,getTasks, getUserTasks, getTask, updateTask, deleteTask };
+module.exports = { createTask, getTasks, getUserTasks, getTask, updateTask, deleteTask };

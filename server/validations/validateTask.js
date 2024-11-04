@@ -1,7 +1,7 @@
 // Task validation middleware
 const validateTaskInput = (req, res, next) => {
+  // checks the task’s name, start time, and end time in req.body
     const { name, startTime, endTime } = req.body;
-    console.log(req.body, 'what')
   
     const errors = {};
   

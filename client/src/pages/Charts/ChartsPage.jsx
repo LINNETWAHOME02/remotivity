@@ -1,13 +1,11 @@
-// Import necessary modules from React and Chart.js libraries
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import axios from 'axios';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
 
-// Register the components we need from Chart.js
 ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
-const ChartsPage = ({ timelogData }) => {
-  // State to store the chart data
+const ChartsPage = () => {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -19,45 +17,58 @@ const ChartsPage = ({ timelogData }) => {
     ],
   });
 
-  // Effect hook to process the timelog data when it changes
   useEffect(() => {
-    // Process the timelogData to generate labels and productivity hours
-    const labels = timelogData.map((log) => log.date);
-    const data = timelogData.map((log) => {
-      const startTime = new Date(`1970-01-01T${log.startTime}:00`);
-      const endTime = new Date(`1970-01-01T${log.endTime}:00`);
-      return (endTime - startTime) / (1000 * 60 * 60); // Calculate hours
-    }); 
+    const fetchTimeLogs = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/task/tasks', { withCredentials: true });
+        const tasks = response.data.tasks;
 
-    // Update the chart data state
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: 'Productivity Hours',
-          data: data,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        },
-      ],
-    });
-  }, [timelogData]);
+        // Process tasks data to generate chart labels and data
+        const labels = tasks.map((task) => new Date(task.startTime).toLocaleDateString());
+        const data = tasks.map((task) => {
+          const startTime = new Date(task.startTime);
+          const endTime = new Date(task.endTime);
+          const hours = (endTime - startTime) / (1000 * 60 * 60); 
+          return hours > 0 ? hours : 0;
+        });
+
+        // Update chart data state
+        setChartData({
+          labels: labels,
+          datasets: [
+            {
+              label: 'Productivity Hours',
+              data: data,
+              backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            },
+          ],
+        });
+      } catch (error) {
+        console.error('Error fetching time logs:', error);
+      }
+    };
+
+    fetchTimeLogs();
+  }, []);
 
   return (
     <div style={{ width: '70%', margin: 'auto' }}>
       <h2>Productivity Chart</h2>
-      {/* Render the bar chart with the chartData state */}
-      <Bar data={chartData} options={{
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
+      <Bar
+        data={chartData}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'User Productivity Over Time',
+            },
           },
-          title: {
-            display: true,
-            text: 'User Productivity Over Time',
-          },
-        },
-      }} />
+        }}
+      />
     </div>
   );
 };

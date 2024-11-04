@@ -1,11 +1,10 @@
 // SignUp.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import './SignUp.css'; // Importing the CSS file for styling
+import './SignUp.css';
 import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
-  // Define state variables for each form field
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -14,20 +13,33 @@ function SignUp() {
 
   const navigate = useNavigate();
 
-  // Handle form input changes by updating the respective state
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission (for now, just logging to console)
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // Send formData object in the request
-      await axios.post('http://localhost:5000/api/auth/sign-up', formData, { withCredentials: true });
-      navigate('/tasks')
-      
+      const response = await axios.post(
+        'http://localhost:5000/api/auth/sign-up',
+        formData,
+        { withCredentials: true }
+      );
+
+      console.log(response, 'this is the response');
+
+      // Save the newUser data to localStorage
+      const newUser = response.data.newUser;
+      if (newUser) {
+        localStorage.setItem('dataUser', JSON.stringify(newUser));
+      }
+
+      // Navigate to tasks page
+      navigate('/tasks');
     } catch (error) {
       console.error('Error signing up:', error.response?.data?.message || error.message);
     }
@@ -37,8 +49,7 @@ function SignUp() {
     <div className="signup-container">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
-        {/* Name input */}
-        <label htmlFor="name">Username</label>
+        <label htmlFor="username">Username</label>
         <input
           type="text"
           id="username"
@@ -47,7 +58,6 @@ function SignUp() {
           onChange={handleChange}
         />
 
-        {/* Email input */}
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -58,7 +68,6 @@ function SignUp() {
           required
         />
 
-        {/* Password input */}
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -69,7 +78,6 @@ function SignUp() {
           required
         />
 
-        {/* Submit button */}
         <button type="submit">Sign Up</button>
       </form>
     </div>

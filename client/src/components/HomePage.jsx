@@ -3,7 +3,7 @@ import React from 'react';
 import './HomePage.css';
 
 function HomePage() {
-  const userLoggedIn = false; // Change this based on user status
+  const userLoggedIn = false; //  Will change based on user status
   const welcomeMessage = userLoggedIn
     ? `Welcome! What do you want to do today?`
     : `Welcome to Remotivity! Join us for better remote work productivity.`;
@@ -11,8 +11,10 @@ function HomePage() {
   return (
     <div className="home-page">
       <h2>{welcomeMessage}</h2>
+      <p className="subtitle">
+        The best way for content creators to make money and connect with the audience
+      </p>
       <div className="sections">
-
         <div className="section" id="tasks">
           <h3>Tasks</h3>
           <p>Manage your tasks and track progress here!</p>

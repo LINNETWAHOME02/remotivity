@@ -1,34 +1,58 @@
 import { useState, useEffect } from 'react';
-import "./Timelogs.css"
+import "./Timelogs.css";
+import axios from 'axios';
 
 const TimeLogs = () => {
-  // State to store time logs
   const [timeLogs, setTimeLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Function to fetch logs from the database (stubbed for now)
   useEffect(() => {
-    // Mock data to simulate fetched time logs
-    const fetchedLogs = [
-      { day: 'Monday', date: '2024-10-28', task: 'Task 1', timeLoggedIn: '10:00 AM', timeCompleted: '10:30 AM' },
-      { day: 'Monday', date: '2024-10-28', task: 'Task 2', timeLoggedIn: '11:00 AM', timeCompleted: '12:00 PM' },
-    ];
-    setTimeLogs(fetchedLogs);
+    const fetchTimeLogs = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/task/tasks', { withCredentials: true });
+        const data = response.data;
+
+        const transformedLogs = data.tasks.map(task => ({
+          id: task._id, 
+          day: new Date(task.startTime).toLocaleDateString('en-US', { weekday: 'long' }),
+          date: new Date(task.startTime).toLocaleDateString(),
+          task: task.name,
+          timeLoggedIn: new Date(task.startTime).toLocaleTimeString(),
+          timeCompleted: new Date(task.endTime).toLocaleTimeString(),
+        }));
+
+        setTimeLogs(transformedLogs);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimeLogs();
   }, []);
 
+  
 
-  // useEffect(() => {
-  //   const now = new Date();
-  //   const filteredLogs = timeLogs.filter(log => {
-  //     const logDate = new Date(log.date + ' ' + log.timeLoggedIn);
-  //     return (now - logDate) < 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-  //   });
-  //   setTimeLogs(filteredLogs);
-  // }, [timeLogs]);
+  
 
-  // Render the time logs table
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/task/${id}`, { withCredentials: true });
+      setTimeLogs(timeLogs.filter(log => log.id !== id)); 
+    } catch (error) {
+      console.error("Error deleting task:", error);  // Logs the full error object for debugging
+      setError(error.message);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="time-logs-container">
-      <h2>Time Logs Page</h2>
+      <h2>Time Logs</h2>
       <table className="time-logs-table">
         <thead>
           <tr>
@@ -37,16 +61,20 @@ const TimeLogs = () => {
             <th>Tasks</th>
             <th>Time Logged In</th>
             <th>Time Completed</th>
+            <th>Actions</th> 
           </tr>
         </thead>
         <tbody>
-          {timeLogs.map((log, index) => (
-            <tr key={index}>
+          {timeLogs.map(log => (
+            <tr key={log.id}>
               <td>{log.day}</td>
               <td>{log.date}</td>
               <td>{log.task}</td>
               <td>{log.timeLoggedIn}</td>
               <td>{log.timeCompleted}</td>
+              <td>
+                <button onClick={() => handleDelete(log.id)}>Delete</button>
+              </td>
             </tr>
           ))}
         </tbody>

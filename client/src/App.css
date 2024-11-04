@@ -16,26 +16,16 @@ body, html {
   overflow: hidden;
 }
 
-/* Navbar styling */
-.Navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-}
 
-/* Container to hold sidebar and main content */
+
 .container {
   display: flex;
   flex-direction: row;
-  margin-top: 60px; /* Adjust based on navbar height */
-  height: calc(100vh - 60px); /* Total height minus navbar */
+  padding-top: 60px; 
   overflow: hidden;
-  margin-top: 5rem;
 }
 
-/* Sidebar styling */
+
 .Sidebar {
   width: 250px;
   background-color: #333;
@@ -44,7 +34,6 @@ body, html {
   overflow-y: auto;
 }
 
-/* Main content styling */
 .main-content {
   flex-grow: 1;
   padding: 20px;

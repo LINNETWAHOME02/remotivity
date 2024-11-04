@@ -1,12 +1,13 @@
-require('dotenv').config(); 
-const Auth = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+require('dotenv').config(); // Tells our program to load environment variables from a .env file
+const Auth = require('../models/User'); // Tells our program how to make, store, and look for users in the database.
+const bcrypt = require('bcryptjs'); // Encrypts passwords
+const jwt = require('jsonwebtoken'); // To identify an authenticated user using a token
 
 // Signup Controller
 // controllers/userController.js
 const signupUser = async (req, res) => {
     try {
+      // Get Info: Takes the name, email, and password from what the user typed (req.body)
       const { username, email, password } = req.body;
   
       // Basic validation
@@ -59,14 +60,12 @@ const signupUser = async (req, res) => {
       await newUser.save();
   
       // Generate JWT token
-      const token = jwt.sign(
-        { userId: newUser._id },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-      );
+      // Token that the new user can use to show they’re allowed in.
+      const token = jwt.sign( { userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' } );
   
 
       // Set cookie
+      // The token is put in a cookie (a tiny storage place in the browser) so that the user stays logged in for the specified time frame.
       res.cookie('wahome', token, {
         httpOnly: true,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
@@ -109,47 +108,11 @@ const signupUser = async (req, res) => {
       });
     }
   };
-  
 
-// // Login Controller
-// const loginUser = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-    
-//     // Check if user exists
-//     const user = await Auth.findOne({ email });
-//     if (!user) {
-//       return res.status(400).json({ message: 'Invalid credentials' });
-//     }
-
-//     // Validate password
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) {
-//       return res.status(400).json({ message: 'Invalid credentials' });
-//     }
-
-//     // Generate token
-//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    
-//     // Store token in a cookie
-//     res.cookie('wahome', token, {
-//       httpOnly: true,
-//       expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
-//       // secure: process.env.NODE_ENV === 'production',
-//       sameSite:'lax',
-//     });
-
-//     res.status(200).json({ message: 'Login successful' });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error in login', error });
-//   }
-// };
-
-
-
-
+// LOG IN controller
 const loginUser = async (req, res) => {
   try {
+    // Get Info: Takes the email and password from the user’s input.
     const { email, password } = req.body;
 
     // Basic validation
@@ -208,11 +171,7 @@ const loginUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: 'Login successful',
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email
-      }
+      user
     });
 
   } catch (error) {
@@ -224,6 +183,7 @@ const loginUser = async (req, res) => {
 };
 
 
+// LOG OUT controller
 const logoutUser = async (req, res) => {
   try {
     res.cookie('wahome', '', {

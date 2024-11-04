@@ -1,46 +1,77 @@
+/* components/HomePage.css */
 .home-page {
-  padding-top: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .home-page h2 {
-  margin-bottom: 2.5rem;
-  color: #333333;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #4a4a4a;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.4;
+  font-weight: 400;
 }
 
 .sections {
-  display: flex;
-  justify-content: space-around;
-  padding: 0 9.375rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 1rem;
+  width: 100%;
 }
 
 .section {
-  background-color: #ffffff;
-  border: 0.3125rem solid #efefef;
-  border-radius: 12.5rem;
-  padding: 6.25rem 7.5rem;
-  margin: 1rem;
-  width: 30%;
-  color: #333333;
-  text-align: center;
+  background-color: white;
+  border: 2px solid #efefef;
+  border-radius: 1rem;
+  padding: 2rem;
+  transition: transform 0.3s ease;
   cursor: pointer;
-  transition: transform 0.3s ease-in-out;
+  text-align: center;
 }
 
 .section:hover {
-  transform: translateY(-0.25rem);
+  transform: translateY(-5px);
 }
 
 .section h3 {
-  margin-bottom: 0.625rem;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  color: #2d2d2d;
+  margin-bottom: 1rem;
   font-weight: 600;
 }
 
 .section p {
-  font-size: 1.125rem;
+  color: #666666;
   line-height: 1.5;
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sections {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .home-page h2 {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    padding: 0 1rem;
+  }
 }

@@ -2,17 +2,15 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
 import HomePage from "./components/HomePage";
 import Timelogs from "./pages/Timelogs/Timelogs";
-import TasksPage from "./pages/Tasks/TasksPage";
 import ChartsPage from "./pages/Charts/ChartsPage";
 import SignUp from "./pages/SignUp/SignUp";
 import LogIn from "./pages/LogIn/LogIn";
 import "./App.css";
+import TaskInput from "./pages/Tasks/TaskInput";
 
 function App() {
-  const [showSidebar, setShowSidebar] = useState(false);
   const [timelogData, setTimelogData] = useState([]);
 
   useEffect(() => {
@@ -29,25 +27,18 @@ function App() {
     fetchData();
   }, []);
 
-  // Toggle sidebar visibility on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowSidebar(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  
 
   return (
     <div className="App">
       <Router>
         <Navbar />
         <div className="container">
-          {showSidebar && <Sidebar />}
+         
           <div className="main-content">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/tasks" element={<TaskInput />} />
               <Route path="/timelogs" element={<Timelogs />} />
               <Route path="/charts" element={<ChartsPage timelogData={timelogData} />} />
               <Route path="/sign-up" element={<SignUp />} />

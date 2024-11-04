@@ -1,32 +1,33 @@
 // Login.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import './LogIn.css'; // Importing the CSS file for styling
-
+import './LogIn.css'; 
+import { useNavigate } from 'react-router-dom';
 function LogIn() {
-  // State variables for form data
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  // Handle email input change
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
-  // Handle password input change
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Pass the email and password directly
       const response = await axios.post('http://localhost:5000/api/auth/log-in', { email, password }, { withCredentials: true });
       
-      // Store the token in localStorage if needed
-      localStorage.setItem('token', response.data.token);
+      const newUser = response.data.user;
+      if (newUser) {
+        localStorage.setItem('dataUser', JSON.stringify(newUser));
+      }
+
+      // Navigate to tasks page
+      navigate('/tasks')
       
       console.log('Logged in successfully');
     } catch (error) {
@@ -38,7 +39,6 @@ function LogIn() {
     <div className="login-container">
       <h2>Log In</h2>
       <form onSubmit={handleSubmit}>
-        {/* Email input */}
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -48,7 +48,6 @@ function LogIn() {
           required
         />
 
-        {/* Password input */}
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -58,7 +57,6 @@ function LogIn() {
           required
         />
 
-        {/* Submit button */}
         <button type="submit">Log In</button>
       </form>
     </div>

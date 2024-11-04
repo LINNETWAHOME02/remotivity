@@ -1,6 +1,7 @@
 import { useState } from "react";
-import axios from "axios"; 
+import axios from "axios";
 import "./TaskInput.css";
+import { useNavigate } from "react-router-dom";
 
 const TaskInput = () => {
   const [task, setTask] = useState("");
@@ -9,31 +10,34 @@ const TaskInput = () => {
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // State for loading
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-  
-    // Validation for endTime
+    setError("");
+
     if (new Date(endTime) <= new Date(startTime)) {
       setError("End time must be after start time.");
       return;
     }
-  
+
     const taskData = {
       name: task,
       description,
       startTime,
       endTime,
     };
-  
+
     try {
       setIsLoading(true);
-      console.log(taskData, 'task'); // Check taskData before sending
-  
-      const response = await axios.post('http://localhost:5000/api/task/create', taskData, { withCredentials: true });
-     
+      console.log(taskData, "task");
+
+      const response = await axios.post(
+        "http://localhost:5000/api/task/create",
+        taskData,
+        { withCredentials: true }
+      );
 
       console.log(response.data);
       setSuccessMessage("Task created successfully!");
@@ -41,18 +45,22 @@ const TaskInput = () => {
       setDescription("");
       setStartTime("");
       setEndTime("");
+      navigate('/timelogs')
     } catch (error) {
-      console.error('Error creating task:', error);
-      setError(error.response?.data?.message || error.message || 'An unexpected error occurred.');
+      console.error("Error creating task:", error);
+      setError(
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred."
+      );
     } finally {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <div className="task-input">
-      <h2>Log Your Task</h2>
+      <div className="log-your-task">Log Your Task</div>
       {error && <p className="error-message">{error}</p>}
       {successMessage && <p className="success-message">{successMessage}</p>}
       <form onSubmit={handleSubmit}>
@@ -94,8 +102,8 @@ const TaskInput = () => {
           />
         </label>
         <button type="submit" disabled={isLoading}>
-  {isLoading ? 'Submitting...' : 'Add Task'}
-</button>
+          {isLoading ? "Submitting..." : "Add Task"}
+        </button>
       </form>
     </div>
   );
