@@ -1,50 +1,53 @@
+/*
+  TaskInput - Is a form that lets you add a new task by filling in details like the task name, description,
+   start time, and end time
+*/
+
 import { useState } from "react";
 import axios from "axios";
 import "./TaskInput.css";
 import { useNavigate } from "react-router-dom";
 
 const TaskInput = () => {
-  const [task, setTask] = useState("");
-  const [description, setDescription] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // useState here is used to keep track of what you type in the form fields
+  const [task, setTask] = useState(""); // task: The task's name
+  const [description, setDescription] = useState(""); // description: What the task is about
+  const [startTime, setStartTime] = useState(""); // startTime: When the task starts
+  const [endTime, setEndTime] = useState(""); // endTime: When the task ends
+  const [error, setError] = useState(""); // error: If something goes wrong, this will store the message
+  const [successMessage, setSuccessMessage] = useState(""); // successMessage: Shows a message if the task is successfully added
+  const [isLoading, setIsLoading] = useState(false); // isLoading: Shows a "Submitting..." button while saving the task
   const navigate = useNavigate();
 
+  // When you press the "Add Task" button, the handleSubmit function runs and submmits your task
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Stop refreshing the page: e.preventDefault() stops the page from reloading
     setError("");
 
+    // Check the times: If the end time is before the start time, show the error
     if (new Date(endTime) <= new Date(startTime)) {
       setError("End time must be after start time.");
       return;
     }
 
-    const taskData = {
-      name: task,
-      description,
-      startTime,
-      endTime,
-    };
+    const taskData = { name: task, description, startTime, endTime };
 
     try {
+      // Prepare the task data: It gathers all the info you entered
       setIsLoading(true);
       console.log(taskData, "task");
 
-      const response = await axios.post(
-        "http://localhost:5000/api/task/create",
-        taskData,
-        { withCredentials: true }
-      );
+      // It sends the task details to the server using axios.post
+      const response = await axios.post( "http://localhost:5000/api/task/create", taskData, { withCredentials: true } );
 
       console.log(response.data);
       setSuccessMessage("Task created successfully!");
+      // Clear the form fields
       setTask("");
       setDescription("");
       setStartTime("");
       setEndTime("");
+      // Navigate to the time logs page
       navigate('/timelogs')
     } catch (error) {
       console.error("Error creating task:", error);
