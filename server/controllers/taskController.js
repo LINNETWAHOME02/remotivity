@@ -6,7 +6,6 @@ const  createTask = async (req, res) => {
     try {
       // Takes Task Info: It grabs the name, description, startTime, and endTime from what someone typed (req.body).
       const { name, description, startTime, endTime } = req.body;
-      console.log(req.body, 'what')
 
       const task = await Task.create({
         name: name.trim(),
