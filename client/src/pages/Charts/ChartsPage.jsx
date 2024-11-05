@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2'; // This helps draw the chart
 import axios from 'axios';
+
+// This is like the brain that knows how to draw chart
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
